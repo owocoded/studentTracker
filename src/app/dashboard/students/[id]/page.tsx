@@ -67,7 +67,7 @@ export default async function StudentPage({
 
   // Build the student-facing and tutor-control URLs
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    process.env.NEXT_PUBLIC_SITE_URL;
 
   const studentLink = `${siteUrl}/student/${student.student_token}`;
   const tutorLink = `${siteUrl}/tutor/${student.tutor_control_token}`;
@@ -173,7 +173,7 @@ export default async function StudentPage({
             <div className="rounded-xl bg-[#FAFAFA] p-4">
               <p className="text-sm text-[#71717A]">Email address</p>
 
-              <p className="mt-1 break-words font-medium text-[#18181B]">
+              <p className="mt-1 wrap-break-word font-medium text-[#18181B]">
                 {student.email || "No email provided"}
               </p>
             </div>
