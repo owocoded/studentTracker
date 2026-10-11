@@ -25,22 +25,15 @@ export default async function StudentsPage() {
       {/* Top navigation */}
       <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-3"
-          >
+          <Link href="/dashboard" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#7C3AED] text-lg font-bold text-white">
               S
             </div>
 
             <div>
-              <p className="font-bold text-[#18181B]">
-                StudentTracker
-              </p>
+              <p className="font-bold text-[#18181B]">StudentTracker</p>
 
-              <p className="text-xs text-[#71717A]">
-                Tutor Dashboard
-              </p>
+              <p className="text-xs text-[#71717A]">Tutor Dashboard</p>
             </div>
           </Link>
 
@@ -80,9 +73,7 @@ export default async function StudentsPage() {
 
         {/* Student count */}
         <div className="mt-8 rounded-2xl border border-[#E9D5FF] bg-[#F5F3FF] p-5">
-          <p className="text-sm font-medium text-[#71717A]">
-            Total Students
-          </p>
+          <p className="text-sm font-medium text-[#71717A]">Total Students</p>
 
           <p className="mt-1 text-3xl font-bold text-[#7C3AED]">
             {students?.length ?? 0}
@@ -98,7 +89,8 @@ export default async function StudentsPage() {
               </p>
 
               <p className="mt-1 text-sm text-red-600">
-                {error.message}
+                Please refresh the page and try again. If the problem persists,
+                contact support.
               </p>
             </div>
           ) : students && students.length > 0 ? (
@@ -161,8 +153,8 @@ export default async function StudentsPage() {
               </h2>
 
               <p className="mx-auto mt-2 max-w-md text-sm text-[#71717A]">
-                Add your first student to start creating tutoring packages
-                and tracking completed sessions.
+                Add your first student to start creating tutoring packages and
+                tracking completed sessions.
               </p>
 
               <Link
