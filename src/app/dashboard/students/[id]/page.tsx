@@ -41,6 +41,7 @@ export default async function StudentPage({
     .from("students")
     .select("id, name, email, phone, student_token, tutor_control_token")
     .eq("id", id)
+    .eq("tutor_id", user.id)
     .single();
 
   if (error || !student) {
