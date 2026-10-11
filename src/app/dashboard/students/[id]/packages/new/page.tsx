@@ -11,18 +11,14 @@ type NewPackagePageProps = {
   }>;
 };
 
-export default function NewPackagePage({
-  params,
-}: NewPackagePageProps) {
+export default function NewPackagePage({ params }: NewPackagePageProps) {
   const router = useRouter();
 
   const [totalSessions, setTotalSessions] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     // Prevent duplicate submissions.
@@ -33,8 +29,14 @@ export default function NewPackagePage({
     const sessionCount = Number(totalSessions);
 
     // Validate the session count before making database requests.
+
     if (!Number.isInteger(sessionCount) || sessionCount <= 0) {
       setError("Please enter a valid whole number of sessions.");
+      return;
+    }
+
+    if (sessionCount > 30) {
+      setError("A package cannot have more than 30 sessions.");
       return;
     }
 
@@ -62,15 +64,14 @@ export default function NewPackagePage({
       }
 
       // Create the package.
-      const { data: packageData, error: packageError } =
-        await supabase
-          .from("packages")
-          .insert({
-            student_id: studentId,
-            total_sessions: sessionCount,
-          })
-          .select("id")
-          .single();
+      const { data: packageData, error: packageError } = await supabase
+        .from("packages")
+        .insert({
+          student_id: studentId,
+          total_sessions: sessionCount,
+        })
+        .select("id")
+        .single();
 
       if (packageError || !packageData) {
         console.error("Package creation error:", packageError);
@@ -79,13 +80,10 @@ export default function NewPackagePage({
       }
 
       // Prepare all sessions for the new package.
-      const sessions = Array.from(
-        { length: sessionCount },
-        (_, index) => ({
-          package_id: packageData.id,
-          session_number: index + 1,
-        }),
-      );
+      const sessions = Array.from({ length: sessionCount }, (_, index) => ({
+        package_id: packageData.id,
+        session_number: index + 1,
+      }));
 
       // Create the package sessions.
       const { error: sessionsError } = await supabase
@@ -125,9 +123,7 @@ export default function NewPackagePage({
         </Link>
 
         <div className="mt-6 rounded-xl bg-white p-6 shadow">
-          <h1 className="text-2xl font-bold">
-            Create Tutoring Package
-          </h1>
+          <h1 className="text-2xl font-bold">Create Tutoring Package</h1>
 
           <p className="mt-2 text-gray-600">
             Set the total number of sessions for this package.
@@ -144,10 +140,7 @@ export default function NewPackagePage({
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-5">
             <div>
-              <label
-                htmlFor="totalSessions"
-                className="mb-2 block font-medium"
-              >
+              <label htmlFor="totalSessions" className="mb-2 block font-medium">
                 Total Sessions
               </label>
 
@@ -155,12 +148,11 @@ export default function NewPackagePage({
                 id="totalSessions"
                 type="number"
                 min="1"
+                max="30"
                 step="1"
                 required
                 value={totalSessions}
-                onChange={(event) =>
-                  setTotalSessions(event.target.value)
-                }
+                onChange={(event) => setTotalSessions(event.target.value)}
                 disabled={loading}
                 placeholder="e.g. 12"
                 className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-black"
@@ -192,9 +184,7 @@ export default function NewPackagePage({
                 href="/dashboard/students"
                 aria-disabled={loading}
                 className={`rounded-lg border px-5 py-3 ${
-                  loading
-                    ? "pointer-events-none opacity-50"
-                    : ""
+                  loading ? "pointer-events-none opacity-50" : ""
                 }`}
               >
                 Cancel
