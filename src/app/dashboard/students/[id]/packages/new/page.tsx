@@ -63,39 +63,18 @@ export default function NewPackagePage({ params }: NewPackagePageProps) {
         return;
       }
 
-      // Create the package.
-      const { data: packageData, error: packageError } = await supabase
-        .from("packages")
-        .insert({
-          student_id: studentId,
-          total_sessions: sessionCount,
-        })
-        .select("id")
-        .single();
+      // Create the package and all its sessions in one transaction.
+      const { error: packageError } = await supabase.rpc(
+        "create_tutoring_package",
+        {
+          p_student_id: studentId,
+          p_total_sessions: sessionCount,
+        },
+      );
 
-      if (packageError || !packageData) {
+      if (packageError) {
         console.error("Package creation error:", packageError);
         setError("Could not create the package. Please try again.");
-        return;
-      }
-
-      // Prepare all sessions for the new package.
-      const sessions = Array.from({ length: sessionCount }, (_, index) => ({
-        package_id: packageData.id,
-        session_number: index + 1,
-      }));
-
-      // Create the package sessions.
-      const { error: sessionsError } = await supabase
-        .from("sessions")
-        .insert(sessions);
-
-      if (sessionsError) {
-        console.error("Session creation error:", sessionsError);
-
-        setError(
-          "The package was created, but its sessions could not be added. Please contact support before trying again.",
-        );
         return;
       }
 
